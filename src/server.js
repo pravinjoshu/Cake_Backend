@@ -4,6 +4,7 @@ import cors from "cors"
 import connectDB from "./config/db.js";
 import userRoutes from "./routers/userRoutes.js";
 import productRoutes from './routers/productRoutes.js'
+import uploadRoutes from './routers/uploadRoutes.js'
 import loginRoutes from './routers/loginRoutes.js'
 import whatsappRoutes from './routers/whatsappRoutes.js'
 
@@ -25,9 +26,11 @@ const app = express();
 app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/public", express.static("public"));
 
 app.use("/api/users", userRoutes);
 app.use("/api/products",productRoutes)
+app.use("/api", uploadRoutes);
 app.use("/api",loginRoutes)
 app.use("/api",whatsappRoutes)
 
