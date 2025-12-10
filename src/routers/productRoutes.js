@@ -10,5 +10,7 @@ router.get("/", getProducts);                   // GET ALL
 router.get("/:id", getProductById);             // GET ONE
 router.put("/:id",verifyToken, updateProductById);       // UPDATE ONE
 router.delete("/:id",verifyToken, deleteProductById);       // DELETE ONE
+ 
+
 
 export default router;

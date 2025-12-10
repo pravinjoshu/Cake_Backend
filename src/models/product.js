@@ -1,39 +1,61 @@
 import mongoose from "mongoose";
+ 
 
 const productSchema = new mongoose.Schema(
   {
-    name: {
+    cakeName: {
       type: String,
       required: true,
       trim: true,
     },
-    description: {
+
+    flavor: {
       type: String,
-    },
-    price: {
-      type: Number,
       required: true,
     },
-    images: [
-      {
-        type: String, // image URL
-      },
-    ],
+
     category: {
       type: String,
       required: true,
     },
+
+    description: {
+      type: String,
+    },
+
+    price: {
+      type: Number,
+      required: true,
+    },
+
+    discount: {
+      type: Number,
+      default: 0,
+    },
+
+    weight: {
+      type: String,
+      required: true,
+    },
+
+    images: [
+      {
+        type: String, // URL only
+        required: true,
+      },
+    ],
+
+    availability: {
+      type: String,
+      enum: ["available", "out-of-stock"],
+      default: "available",
+    },
+
     stock: {
       type: Number,
       default: 0,
     },
-    weight: {
-      type: String,
-    },
-    isAvailable: {
-      type: Boolean,
-      default: true,
-    }
+ 
   },
   { timestamps: true }
 );
