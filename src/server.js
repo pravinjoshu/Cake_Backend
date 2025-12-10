@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routers/userRoutes.js";
 import productRoutes from './routers/productRoutes.js'
 import loginRoutes from './routers/loginRoutes.js'
+import whatsappRoutes from './routers/whatsappRoutes.js'
 
  
  
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/users", userRoutes);
 app.use("/api/products",productRoutes)
 app.use("/api",loginRoutes)
+app.use("/api",whatsappRoutes)
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}`);
