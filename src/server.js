@@ -7,6 +7,7 @@ import productRoutes from './routers/productRoutes.js'
 import loginRoutes from './routers/loginRoutes.js'
 import whatsappRoutes from './routers/whatsappRoutes.js'
 
+
  
  
 dotenv.config();

@@ -1,6 +1,7 @@
 import { User } from "../models/login.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import axios from "axios";
 import { sendOTP } from "../utils/mail.js";
 
 export const registerUser = async (req, res) => {
@@ -64,6 +65,68 @@ export const loginUser = async (req, res) => {
   }
 };
 
+export const googleLogin = async (req, res) => {
+  try {
+    const { access_token } = req.body;
+
+    if (!access_token) {
+      return res.status(400).json({
+        success: false,
+        message: "No access token provided"
+      });
+    }
+
+    // Get user info from Google
+    const googleUser = await axios.get(
+      `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
+    );
+
+    const { email, name, picture } = googleUser.data;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Google account has no email"
+      });
+    }
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    // Create new user if not exists
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        picture,
+        password: null,
+        loginType: "GOOGLE",
+      });
+    }
+
+    // Create JWT
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    return res.json({
+      success: true,
+      message: "Google login successful",
+      token,
+      user,
+    });
+
+  } catch (error) {
+    console.error("Google Login Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Google login failed"
+    });
+  }
+};
+
 
 // TEMP OTP STORAGE
 
@@ -104,6 +167,7 @@ export const forgotPassword = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 
 // let otpStore = {};  
