@@ -1,7 +1,7 @@
 export const uploadImage = (req, res) => {
   try {
     const urls = req.files.map(file => {
-      return `${process.env.BASE_URL}/images/${file.filename}`;
+      return ` ${file.filename}`;
     });
 
     res.status(200).json({

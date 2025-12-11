@@ -1,9 +1,22 @@
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/images");
+    let cakeName = req.body.cakeName || "unknown";
+
+    // convert to safe folder name
+    cakeName = cakeName.toLowerCase().replace(/ /g, "_");
+
+    const folderPath = `public/images/${cakeName}`;
+
+    // If folder does NOT exist → create it
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath, { recursive: true });
+    }
+
+    cb(null, folderPath);
   },
 
   filename: (req, file, cb) => {
