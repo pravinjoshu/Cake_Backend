@@ -18,16 +18,31 @@ export const createProduct = async (req, res) => {
 export const getProducts = async (req, res) => {
   try {
     const products = await Product.find();
+
+    const updatedProducts = products.map((p) => {
+      const imagesWithUrl = p.images.map(img => {
+     const cakeName = p.cakeName.toLowerCase().replace(/ /g, "_");
+        return `${process.env.BASE_URL}/public/images/${cakeName}/${img.trim()}`;
+      });
+
+      return {
+        ...p._doc,
+        images: imagesWithUrl
+      };
+    });
+
     res.status(200).json({
       success: true,
       message: "All products fetched successfully.",
-      total: products.length,
-      products
+      total: updatedProducts.length,
+      products: updatedProducts
     });
+
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // Get One Product
 export const getProductById = async (req, res) => {
