@@ -7,6 +7,8 @@ import productRoutes from './routers/productRoutes.js'
 import uploadRoutes from './routers/uploadRoutes.js'
 import loginRoutes from './routers/loginRoutes.js'
 import whatsappRoutes from './routers/whatsappRoutes.js'
+import userDetailsRoutes from './routers/userDetailsRoutes.js'
+import orderRoutes from './routers/orderRoutes.js'
 
 
  
@@ -34,6 +36,8 @@ app.use("/api/products",productRoutes)
 app.use("/api", uploadRoutes);
 app.use("/api",loginRoutes)
 app.use("/api",whatsappRoutes)
+app.use("/api",userDetailsRoutes)
+app.use("/api",orderRoutes)
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}`);
