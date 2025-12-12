@@ -19,23 +19,23 @@ export const getProducts = async (req, res) => {
   try {
     const products = await Product.find();
 
-    const updatedProducts = products.map((p) => {
-      const imagesWithUrl = p.images.map(img => {
-     const cakeName = p.cakeName.toLowerCase().replace(/ /g, "_");
-        return `${process.env.BASE_URL}/public/images/${cakeName}/${img.trim()}`;
-      });
+    // const updatedProducts = products.map((p) => {
+    //   const imagesWithUrl = p.images.map(img => {
+    //  const cakeName = p.cakeName.toLowerCase().replace(/ /g, "_");
+    //     return `${process.env.BASE_URL}/public/images/${cakeName}/${img.trim()}`;
+    //   });
 
-      return {
-        ...p._doc,
-        images: imagesWithUrl
-      };
-    });
+    //   return {
+    //     ...p._doc,
+    //     images: imagesWithUrl
+    //   };
+    // });
 
     res.status(200).json({
       success: true,
       message: "All products fetched successfully.",
-      total: updatedProducts.length,
-      products: updatedProducts
+      // total: updatedProducts.length,
+      products
     });
 
   } catch (error) {
@@ -56,15 +56,31 @@ export const getProductById = async (req, res) => {
       });
     }
 
+    // // Convert cakeName → folder name
+    // const cakeNameFolder = product.cakeName.toLowerCase().replace(/ /g, "_");
+
+    // // Build correct full URLs
+    // const imagesWithUrl = product.images.map((img) => {
+    //   return `${process.env.BASE_URL}/public/images/${cakeNameFolder}/${img.trim()}`;
+    // });
+
+    // // return modified product
+    // const updatedProduct = {
+    //   ...product._doc,
+    //   images: imagesWithUrl
+    // };
+
     res.status(200).json({
       success: true,
       message: "Product details fetched successfully.",
       product
     });
+
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 export const deleteProductById = async (req, res) => {
   try {
@@ -76,6 +92,8 @@ export const deleteProductById = async (req, res) => {
         message: "Product not found."
       });
     }
+
+    
 
     res.status(200).json({
       success: true,

@@ -5,11 +5,14 @@ import fs from "fs";
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     let cakeName = req.body.cakeName || "unknown";
+    let weight = req.body.weight || "standard";
 
     // convert to safe folder name
     cakeName = cakeName.toLowerCase().replace(/ /g, "_");
+     weight = weight.replace(".", "_");
 
-    const folderPath = `public/images/${cakeName}`;
+    const folderPath = `public/images/${cakeName}_${weight}`;
+    
 
     // If folder does NOT exist → create it
     if (!fs.existsSync(folderPath)) {
