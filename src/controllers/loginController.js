@@ -63,7 +63,10 @@ export const loginUser = async (req, res) => {
       success: true,
       message: "Login successful",
       token,
-      user,
+      user: {
+        ...user._doc,
+        role: "user"    
+      }
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -119,7 +122,10 @@ export const googleLogin = async (req, res) => {
       success: true,
       message: "Google login successful",
       token,
-      user,
+       user: {
+        ...user._doc,
+        role: "user"   // <-- response la role send panrom
+      }
     });
   } catch (error) {
     console.error("Google Login Error:", error);

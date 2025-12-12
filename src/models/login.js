@@ -8,14 +8,7 @@ const userSchema = new mongoose.Schema(
     // Password optional (Google users do NOT have password)
     password: { type: String, trim: true, default: null },
 
-    // For Google login or social login
-    picture: { type: String, default: "" },
-
-    loginType: {
-      type: String,
-      enum: ["EMAIL", "GOOGLE"],
-      default: "EMAIL"
-    }
+     
   },
   { timestamps: true }
 );
