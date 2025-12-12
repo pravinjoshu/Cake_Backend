@@ -11,7 +11,9 @@ export const registerUser = async (req, res) => {
     // Check existing user
     const exists = await User.findOne({ email });
     if (exists) {
-      return res.status(400).json({ success: false, message: "User already exists" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,28 +34,31 @@ export const registerUser = async (req, res) => {
   }
 };
 
-
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return res.status(400).json({ success: false, message: "Invalid credentials" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     const token = jwt.sign(
-  { id: user._id },
-  process.env.JWT_SECRET,   // <-- ENV use pannunga
-  { expiresIn: "7d" }
-);
+      { id: user._id },
+      process.env.JWT_SECRET, // <-- ENV use pannunga
+      { expiresIn: "7d" }
+    );
 
-    console.log(token)
+    console.log(token);
     res.status(200).json({
       success: true,
       message: "Login successful",
@@ -72,7 +77,7 @@ export const googleLogin = async (req, res) => {
     if (!access_token) {
       return res.status(400).json({
         success: false,
-        message: "No access token provided"
+        message: "No access token provided",
       });
     }
 
@@ -82,11 +87,12 @@ export const googleLogin = async (req, res) => {
     );
 
     const { email, name, picture } = googleUser.data;
+    console.log(googleUser.data, "sdfghjkljhgfdsdfghjhgfdsdfghjkjhgfds");
 
     if (!email) {
       return res.status(400).json({
         success: false,
-        message: "Google account has no email"
+        message: "Google account has no email",
       });
     }
 
@@ -105,11 +111,9 @@ export const googleLogin = async (req, res) => {
     }
 
     // Create JWT
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
     return res.json({
       success: true,
@@ -117,19 +121,16 @@ export const googleLogin = async (req, res) => {
       token,
       user,
     });
-
   } catch (error) {
     console.error("Google Login Error:", error);
     res.status(500).json({
       success: false,
-      message: "Google login failed"
+      message: "Google login failed",
     });
   }
 };
 
-
 // TEMP OTP STORAGE
-
 
 let otpStore = {};
 
@@ -141,7 +142,7 @@ export const forgotPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "Email not found"
+        message: "Email not found",
       });
     }
 
@@ -151,7 +152,7 @@ export const forgotPassword = async (req, res) => {
     // Store OTP temporarily
     otpStore[email] = {
       otp,
-      expiresAt: Date.now() + 5 * 60 * 1000
+      expiresAt: Date.now() + 5 * 60 * 1000,
     };
 
     // **Actual email send**
@@ -160,17 +161,14 @@ export const forgotPassword = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "OTP sent to your email",
-      email
+      email,
     });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-
-
-// let otpStore = {};  
+// let otpStore = {};
 
 // export const forgotPassword = async (req, res) => {
 //   try {
@@ -193,7 +191,7 @@ export const forgotPassword = async (req, res) => {
 //       expiresAt: Date.now() + 5 * 60 * 1000
 //     };
 
-//     // ⚠️ NOTE: Real project-la nodemailer use pannu  
+//     // ⚠️ NOTE: Real project-la nodemailer use pannu
 //     console.log("Your OTP:", otp);
 
 //     res.status(200).json({
@@ -207,8 +205,6 @@ export const forgotPassword = async (req, res) => {
 //   }
 // };
 
-
-
 export const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -216,7 +212,7 @@ export const verifyOtp = async (req, res) => {
     if (!otpStore[email]) {
       return res.status(400).json({
         success: false,
-        message: "OTP not requested or expired"
+        message: "OTP not requested or expired",
       });
     }
 
@@ -227,28 +223,26 @@ export const verifyOtp = async (req, res) => {
       delete otpStore[email];
       return res.status(400).json({
         success: false,
-        message: "OTP expired"
+        message: "OTP expired",
       });
     }
 
     if (otp !== correctOtp) {
       return res.status(400).json({
         success: false,
-        message: "Invalid OTP"
+        message: "Invalid OTP",
       });
     }
 
     // OTP verified — allow reset
     res.status(200).json({
       success: true,
-      message: "OTP verified successfully"
+      message: "OTP verified successfully",
     });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 export const resetPassword = async (req, res) => {
   try {
@@ -258,7 +252,7 @@ export const resetPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found"
+        message: "User not found",
       });
     }
 
@@ -272,13 +266,9 @@ export const resetPassword = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Password reset successfully"
+      message: "Password reset successfully",
     });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
-
-
