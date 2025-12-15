@@ -9,6 +9,8 @@ import loginRoutes from './routers/loginRoutes.js'
 import whatsappRoutes from './routers/whatsappRoutes.js'
 import userDetailsRoutes from './routers/userDetailsRoutes.js'
 import orderRoutes from './routers/orderRoutes.js'
+import notificationRoutes from "./routers/notificationRoutes.js";
+ 
 import wishlistRoutes from './routers/wishlistRoutes.js'
 
 
@@ -35,11 +37,14 @@ app.use("/public", express.static("public"));
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes)
 app.use("/api", uploadRoutes);
+ 
+app.use("/api",notificationRoutes)
 app.use("/api", loginRoutes)
 app.use("/api", whatsappRoutes)
 app.use("/api", userDetailsRoutes)
 app.use("/api", orderRoutes)
 app.use("/api", wishlistRoutes);
+ 
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}`);

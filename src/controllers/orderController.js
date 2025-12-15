@@ -1,4 +1,6 @@
 import { Order } from "../models/order.js";
+import { Notification } from "../models/notification.js";
+
 
 // Generate unique order ID
 const generateOrderId = () => {
@@ -7,7 +9,8 @@ const generateOrderId = () => {
   return `ORD${timestamp}${random}`;
 };
 
-// Place order
+ 
+
 export const placeOrder = async (req, res) => {
   try {
     const {
@@ -21,20 +24,25 @@ export const placeOrder = async (req, res) => {
       deliveryCharge
     } = req.body;
 
-    // Validation
-    if (!userId || !cartItems || !deliveryDetails || !deliveryDate || !deliveryTime || !paymentMethod) {
+    if (
+      !userId ||
+      !cartItems ||
+      !deliveryDetails ||
+      !deliveryDate ||
+      !deliveryTime ||
+      !paymentMethod
+    ) {
       return res.status(400).json({
         success: false,
         message: "All fields are required"
       });
     }
 
-    // Generate order ID
-    const orderId = generateOrderId();
+    const orderIdStr = generateOrderId();
 
-    // Create order
+    // 1️⃣ CREATE ORDER
     const order = await Order.create({
-      orderId,
+      orderId: orderIdStr,
       userId,
       cartItems,
       deliveryDetails,
@@ -42,32 +50,76 @@ export const placeOrder = async (req, res) => {
       deliveryTime,
       paymentMethod,
       totalAmount,
-      deliveryCharge
+      deliveryCharge,
+      status: "pending"
     });
 
+    // 2️⃣ CREATE NOTIFICATION (MATCHES YOUR SCHEMA)
+    await Notification.create({
+      type: "NEW_ORDER",
+      title: "New Order Received",
+      message: `Order ${orderIdStr} placed by ${deliveryDetails.fullName} for ₹${totalAmount}`,
+      orderId: order._id,   // ✅ ObjectId reference
+      isRead: false
+    });
+
+    // 3️⃣ RESPONSE
     res.status(201).json({
       success: true,
-      orderId: order.orderId,
       message: "Order placed successfully",
+      orderId: order.orderId,
       order
     });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
 
-// Get user orders (optional - future use)
+
+// ✅ EXPORT getUserOrders (THIS WAS MISSING)
 export const getUserOrders = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    const orders = await Order
+      .find({ userId })
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
       orders
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
+
+
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const { id } = req.params;
+
+    const order = await Order.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    res.json({ success: true, order });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
