@@ -22,13 +22,30 @@ export const getNotifications = async (req, res) => {
 
 
 export const getUnreadCount = async (req, res) => {
-  const count = await Notification.countDocuments({ isRead: false });
-  res.json({ count });
+  try {
+    const count = await Notification.countDocuments({ isRead: false });
+    res.status(200).json({ success: true, count });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
 
 export const markAsRead = async (req, res) => {
-  await Notification.findByIdAndUpdate(req.params.id, {
-    isRead: true,
-  });
-  res.json({ success: true });
+  try {
+    await Notification.findByIdAndUpdate(req.params.id, {
+      isRead: true,
+    });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const markAllAsRead = async (req, res) => {
+  try {
+    await Notification.updateMany({ isRead: false }, { isRead: true });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
