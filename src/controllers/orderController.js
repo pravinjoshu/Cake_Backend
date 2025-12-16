@@ -10,7 +10,6 @@ const generateOrderId = () => {
 };
 
  
-
 export const acceptOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
