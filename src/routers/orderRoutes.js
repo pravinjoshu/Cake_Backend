@@ -15,7 +15,7 @@ const router = express.Router();
 router.post("/orders", verifyToken, placeOrder);
 
 // Get user orders - Protected route (optional)
-router.get("/user/:userId", verifyToken, getUserOrders);
+router.get("/orders/user/:userId", verifyToken, getUserOrders);
 
 // Get all orders (Admin)
 router.get("/orders", getAllOrders);
