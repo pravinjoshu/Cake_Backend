@@ -49,3 +49,40 @@ export const markAllAsRead = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const acceptNotification = async (req, res) => {
+  const { notificationId } = req.params;
+
+  const notification = await Notification.findById(notificationId);
+  if (!notification) {
+    return res.status(404).json({ message: "Not found" });
+  }
+
+  notification.isAccepted = true;
+  notification.isRejected = false;
+  notification.isRead = true;
+  await notification.save();
+
+  res.json({ success: true });
+};
+
+export const rejectNotification = async (req, res) => {
+  const { notificationId } = req.params;
+
+  const notification = await Notification.findById(notificationId);
+
+  notification.isRejected = true;
+  notification.isAccepted = false;
+  notification.isRead = true;
+  await notification.save();
+
+  // optional
+  await Order.findByIdAndUpdate(notification.orderId, {
+    status: "cancelled",
+  });
+
+  res.json({ success: true });
+};
+
+
+

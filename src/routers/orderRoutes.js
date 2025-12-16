@@ -4,7 +4,8 @@ import {
     getUserOrders,
     updateOrderStatus,
     getAllOrders,
-    deleteOrderById
+    deleteOrderById,
+    acceptOrder
 } from "../controllers/orderController.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
 
@@ -24,6 +25,6 @@ router.patch("/orders/:id/status", updateOrderStatus);
 
 // Delete order
 router.delete("/orders/:id", deleteOrderById);
-
+router.put("/orders/:orderId/accept", acceptOrder);
 
 export default router;

@@ -9,6 +9,38 @@ const generateOrderId = () => {
   return `ORD${timestamp}${random}`;
 };
 
+ 
+
+export const acceptOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    order.status = "accepted";
+    await order.save();
+
+    res.json({
+      success: true,
+      message: "Order accepted successfully",
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 
 
 export const placeOrder = async (req, res) => {
