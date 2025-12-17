@@ -10,6 +10,7 @@ import whatsappRoutes from './routers/whatsappRoutes.js'
 import userDetailsRoutes from './routers/userDetailsRoutes.js'
 import orderRoutes from './routers/orderRoutes.js'
 import notificationRoutes from "./routers/notificationRoutes.js";
+import couponRoutes from "./routers/couponRoutes.js"
  
 import wishlistRoutes from './routers/wishlistRoutes.js'
 
@@ -43,6 +44,7 @@ app.use("/api", loginRoutes)
 app.use("/api", whatsappRoutes)
 app.use("/api", userDetailsRoutes)
 app.use("/api", orderRoutes)
+app.use("/api", couponRoutes)
 app.use("/api", wishlistRoutes);
  
 
