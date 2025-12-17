@@ -7,7 +7,7 @@ const orderSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
 
     cartItems: [
@@ -17,8 +17,8 @@ const orderSchema = new mongoose.Schema(
         weight: String,
         price: Number,
         quantity: Number,
-        nameOnCake: String
-      }
+        nameOnCake: String,
+      },
     ],
 
     deliveryDetails: {
@@ -31,9 +31,9 @@ const orderSchema = new mongoose.Schema(
         street: String,
         landmark: String,
         city: String,
-        pincode: String
+        pincode: String,
       },
-      instructions: String
+      instructions: String,
     },
 
     deliveryDate: { type: String, required: true },
@@ -42,19 +42,18 @@ const orderSchema = new mongoose.Schema(
     paymentMethod: {
       type: String,
       enum: ["online", "cod"],
-      required: true
+      required: true,
     },
 
     totalAmount: { type: Number, required: true },
     deliveryCharge: { type: Number, required: true },
 
-   status: {
-  type: String,
-  enum: ["pending", "ready", "completed", "cancelled"],
-  default: "pending"
-}
-
-
+    // ✅ FIXED: Changed "completed" to "delivered"
+    status: {
+      type: String,
+      enum: ["pending", "ready", "delivered", "cancelled"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );
