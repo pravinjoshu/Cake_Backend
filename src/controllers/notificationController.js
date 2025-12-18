@@ -49,21 +49,48 @@ export const markAllAsRead = async (req, res) => {
   }
 };
 
+
 export const acceptNotification = async (req, res) => {
-  const { notificationId } = req.params;
+  try {
+    const { notificationId } = req.params;
 
-  const notification = await Notification.findById(notificationId);
-  if (!notification) {
-    return res.status(404).json({ message: "Not found" });
+    // 1️⃣ Find notification
+    const notification = await Notification.findById(notificationId);
+
+    if (!notification) {
+      return res.status(404).json({
+        success: false,
+        message: "Notification not found",
+      });
+    }
+
+    // 2️⃣ Update notification status
+    notification.isAccepted = true;
+    notification.isRejected = false;
+    notification.isRead = true;
+    await notification.save();
+
+    // 3️⃣ Update related order ✅
+    await Order.findByIdAndUpdate(
+      notification.orderId,
+      {
+        notificationStatus: true, // ⭐ THIS IS WHAT YOU WANT
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Notification accepted & order updated",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
-
-  notification.isAccepted = true;
-  notification.isRejected = false;
-  notification.isRead = true;
-  await notification.save();
-
-  res.json({ success: true });
 };
+
 
 export const rejectNotification = async (req, res) => {
   const { notificationId } = req.params;

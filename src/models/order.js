@@ -54,6 +54,10 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "ready", "delivered", "cancelled"],
       default: "pending",
     },
+    notificationstatus: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
