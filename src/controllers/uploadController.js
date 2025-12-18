@@ -16,6 +16,7 @@ export const updateImage = (req, res) => {
     }
 
     const newImage = req.file.filename;
+    console.log(process.env.BASE_URL,"env")
 
     res.status(200).json({
       success: true,
