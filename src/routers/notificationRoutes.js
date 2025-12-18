@@ -5,7 +5,8 @@ import {
   markAsRead,
   markAllAsRead,
   acceptNotification,
-  rejectNotification
+  rejectNotification,
+  deleteNotification,
 } from "../controllers/notificationController.js";
 
 const router = express.Router();
@@ -16,6 +17,7 @@ router.patch("/notifications/mark-read", markAllAsRead);
 router.put("/notifications/:id/read", markAsRead);
 router.put("/notifications/:notificationId/accept", acceptNotification);
 router.put("/notifications/:notificationId/reject", rejectNotification);
+router.delete("/notifications/:notificationId", deleteNotification);
 
 
 export default router;
