@@ -54,9 +54,7 @@ export const acceptNotification = async (req, res) => {
   try {
     const { notificationId } = req.params;
 
-    // 1️⃣ Find notification
     const notification = await Notification.findById(notificationId);
-
     if (!notification) {
       return res.status(404).json({
         success: false,
@@ -64,19 +62,18 @@ export const acceptNotification = async (req, res) => {
       });
     }
 
-    // 2️⃣ Update notification status
+    // 1️⃣ Update notification
     notification.isAccepted = true;
     notification.isRejected = false;
     notification.isRead = true;
     await notification.save();
 
-    // 3️⃣ Update related order ✅
+    // 2️⃣ Update related order (STRING!)
     await Order.findByIdAndUpdate(
       notification.orderId,
       {
-        notificationStatus: true, // ⭐ THIS IS WHAT YOU WANT
-      },
-      { new: true }
+        notificationstatus: "true", // ⭐ THIS LINE
+      }
     );
 
     res.status(200).json({
