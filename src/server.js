@@ -46,6 +46,8 @@ app.use("/api", userDetailsRoutes)
 app.use("/api", orderRoutes)
 app.use("/api", couponRoutes)
 app.use("/api", wishlistRoutes);
+
+ console.log(process.env.BASE_URL,"env")
  
 
 app.listen(process.env.PORT, () => {
