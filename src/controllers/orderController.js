@@ -82,7 +82,8 @@ export const placeOrder = async (req, res) => {
       paymentMethod,
       totalAmount,
       deliveryCharge,
-      status: "pending"
+      status: "pending",
+      notificationStatus: false,
     });
 
     // 2️⃣ CREATE NOTIFICATION (MATCHES YOUR SCHEMA)
