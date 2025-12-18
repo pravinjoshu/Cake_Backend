@@ -1,4 +1,4 @@
-import Product from "../models/Product.js";
+import Product from "../models/product.js";
 
 // Create Product
 export const createProduct = async (req, res) => {
@@ -56,19 +56,7 @@ export const getProductById = async (req, res) => {
       });
     }
 
-    // // Convert cakeName → folder name
-    // const cakeNameFolder = product.cakeName.toLowerCase().replace(/ /g, "_");
-
-    // // Build correct full URLs
-    // const imagesWithUrl = product.images.map((img) => {
-    //   return `${process.env.BASE_URL}/public/images/${cakeNameFolder}/${img.trim()}`;
-    // });
-
-    // // return modified product
-    // const updatedProduct = {
-    //   ...product._doc,
-    //   images: imagesWithUrl
-    // };
+     
 
     res.status(200).json({
       success: true,
