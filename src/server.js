@@ -11,6 +11,9 @@ import userDetailsRoutes from './routers/userDetailsRoutes.js'
 import orderRoutes from './routers/orderRoutes.js'
 import notificationRoutes from "./routers/notificationRoutes.js";
 import couponRoutes from "./routers/couponRoutes.js"
+// import scratchCardRoutes from './routers/scratchCardRoutes.js'; 
+import scratchCardRouter from './routers/scratchCardRouter.js';
+ 
 import wishlistRoutes from './routers/wishlistRoutes.js'
 import reviewRoutes from './routers/reviewRoutes.js'
  
@@ -47,6 +50,8 @@ app.use("/api", userDetailsRoutes)
 app.use("/api", orderRoutes)
 app.use("/api", couponRoutes)
 app.use("/api", wishlistRoutes);
+// app.use('/api/scratch-cards', scratchCardRoutes);
+app.use('/api/scratchcards', scratchCardRouter);
 app.use("/api", reviewRoutes);
 
  console.log(process.env.BASE_URL,"env")

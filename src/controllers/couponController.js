@@ -4,7 +4,7 @@ export const createCoupon = async (req, res) => {
   try {
     const { 
       code, discountType, discountValue, minOrderValue, 
-      maxDiscountAmount, expiryDate, usageLimit 
+      maxDiscountAmount, expiryDate, usageLimit, isRewardOnly 
     } = req.body;
     const existingCoupon = await Coupon.findOne({ code: code.toUpperCase() });
     if (existingCoupon) {
@@ -17,7 +17,8 @@ export const createCoupon = async (req, res) => {
       minOrderValue,
       maxDiscountAmount,
       expiryDate,
-      usageLimit
+      usageLimit,
+      isRewardOnly: isRewardOnly || false
     });
     await newCoupon.save();
     res.status(201).json({ message: 'Coupon created successfully', coupon: newCoupon });
@@ -31,6 +32,7 @@ export const getActiveCoupons = async (req, res) => {
     const now = new Date();
     const coupons = await Coupon.find({
       isActive: true,
+      isRewardOnly: false,
       expiryDate: { $gt: now }
     });
     res.status(200).json(coupons);
