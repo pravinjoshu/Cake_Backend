@@ -8,6 +8,13 @@ const userSchema = new mongoose.Schema(
     // Password optional (Google users do NOT have password)
     password: { type: String, trim: true, default: null },
 
+   role: {
+  type: String,
+  enum: ["user", "admin"], // ✅ correct
+  default: "user",
+},
+
+
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,

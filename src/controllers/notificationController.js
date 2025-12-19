@@ -3,10 +3,10 @@ import { Order } from "../models/order.js";
 
 export const getNotifications = async (req, res) => {
   try {
-     
-
-    const notifications = await Notification
-      .find()
+    const notifications = await Notification.find({
+      isAccepted: false,
+      isRejected: false,
+    })
       .populate("orderId")
       .sort({ createdAt: -1 });
 
@@ -18,6 +18,7 @@ export const getNotifications = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
 
 
 export const getUnreadCount = async (req, res) => {

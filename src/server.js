@@ -11,8 +11,9 @@ import userDetailsRoutes from './routers/userDetailsRoutes.js'
 import orderRoutes from './routers/orderRoutes.js'
 import notificationRoutes from "./routers/notificationRoutes.js";
 import couponRoutes from "./routers/couponRoutes.js"
- 
 import wishlistRoutes from './routers/wishlistRoutes.js'
+import reviewRoutes from './routers/reviewRoutes.js'
+ 
 
 
 
@@ -34,11 +35,11 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static("public"));
+app.use("/review", express.static("public/review"));
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes)
 app.use("/api", uploadRoutes);
- 
 app.use("/api",notificationRoutes)
 app.use("/api", loginRoutes)
 app.use("/api", whatsappRoutes)
@@ -46,6 +47,7 @@ app.use("/api", userDetailsRoutes)
 app.use("/api", orderRoutes)
 app.use("/api", couponRoutes)
 app.use("/api", wishlistRoutes);
+app.use("/api", reviewRoutes);
 
  console.log(process.env.BASE_URL,"env")
  
