@@ -11,7 +11,7 @@ export const addReview = async (req, res) => {
     if (!cakeName || !description || !rating || !images || images.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "Cake name, description, rating and image are required",
+        message: "Cake name, description, rating and at least 1 image are required",
       });
     }
 
