@@ -34,3 +34,22 @@ export const addReview = async (req, res) => {
     });
   }
 };
+
+
+export const getAllReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find()
+      .sort({ createdAt: -1 }); // latest first
+
+    res.status(200).json({
+      success: true,
+      count: reviews.length,
+      reviews,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
