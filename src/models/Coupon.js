@@ -39,6 +39,10 @@ const couponSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true
+  },
+  isRewardOnly: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 // Check if coupon is valid
