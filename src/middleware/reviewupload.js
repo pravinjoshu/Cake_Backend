@@ -5,16 +5,17 @@ import fs from "fs";
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     let cakeName = req.body.cakeName || "unknown";
-    let weight = req.body.weight || "standard";
 
-    // convert to safe folder name
-    cakeName = cakeName.toLowerCase().replace(/ /g, "_");
-     weight = weight.replace(".", "_");
+    // ✅ safe folder name
+    cakeName = cakeName
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^a-z0-9_]/g, "");
 
-    const folderPath = `public/review/${cakeName}_${weight}`;
-    
+    const folderPath = `public/review/${cakeName}`;
 
-    // If folder does NOT exist → create it
+    // ✅ create folder if not exists
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath, { recursive: true });
     }
@@ -23,19 +24,23 @@ const storage = multer.diskStorage({
   },
 
   filename: (req, file, cb) => {
-  let cakeName = req.body.cakeName || "cake";
+    let cakeName = req.body.cakeName || "cake";
 
-  cakeName = cakeName.toLowerCase().replace(/ /g, "_");
+    cakeName = cakeName
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^a-z0-9_]/g, "");
 
-  if (!req.imageCount) req.imageCount = 0;
-  req.imageCount++;
+    // image counter
+    if (!req.imageCount) req.imageCount = 0;
+    req.imageCount++;
 
-  const ext = path.extname(file.originalname);
-  const fileName = `${cakeName}_image_${req.imageCount}${ext}`;
+    const ext = path.extname(file.originalname);
+    const fileName = `${cakeName}_image_${req.imageCount}${ext}`;
 
-  cb(null, fileName);
-}
-
+    cb(null, fileName);
+  },
 });
 
 const upload = multer({ storage });

@@ -35,6 +35,7 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static("public"));
+app.use("/review", express.static("public/review"));
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes)
