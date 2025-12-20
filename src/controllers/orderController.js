@@ -9,7 +9,7 @@ const generateOrderId = () => {
   return `ORD${timestamp}${random}`;
 };
 
- 
+
 export const acceptOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
@@ -50,7 +50,10 @@ export const placeOrder = async (req, res) => {
       deliveryDetails,
       paymentMethod,
       totalAmount,
-      deliveryCharge
+      deliveryCharge,
+      deliveryDate, // Added
+      deliveryTime, // Added
+      wishesOnCake  // Added
     } = req.body;
 
     if (
@@ -72,7 +75,12 @@ export const placeOrder = async (req, res) => {
       orderId: orderIdStr,
       userId,
       cartItems,
-      deliveryDetails,
+      deliveryDetails: {
+        ...deliveryDetails,
+        deliveryDate, // Correctly nesting it
+        deliveryTime, // Correctly nesting it
+        cakeWishes: wishesOnCake // Mapping the name correctly
+      },
       paymentMethod,
       totalAmount,
       deliveryCharge,
