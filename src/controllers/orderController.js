@@ -48,8 +48,6 @@ export const placeOrder = async (req, res) => {
       userId,
       cartItems,
       deliveryDetails,
-      deliveryDate,
-      deliveryTime,
       paymentMethod,
       totalAmount,
       deliveryCharge
