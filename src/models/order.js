@@ -26,6 +26,9 @@ const orderSchema = new mongoose.Schema(
       phone: String,
       email: String,
       whatsapp: String,
+      cakeWishes:String,
+      deliveryDate:String,
+      deliveryTime:String,
       address: {
         flatNo: String,
         street: String,
@@ -36,8 +39,7 @@ const orderSchema = new mongoose.Schema(
       instructions: String,
     },
 
-    deliveryDate: { type: String, required: true },
-    deliveryTime: { type: String, required: true },
+    
 
     paymentMethod: {
       type: String,
