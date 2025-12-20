@@ -48,8 +48,6 @@ export const placeOrder = async (req, res) => {
       userId,
       cartItems,
       deliveryDetails,
-      deliveryDate,
-      deliveryTime,
       paymentMethod,
       totalAmount,
       deliveryCharge
@@ -59,8 +57,6 @@ export const placeOrder = async (req, res) => {
       !userId ||
       !cartItems ||
       !deliveryDetails ||
-      !deliveryDate ||
-      !deliveryTime ||
       !paymentMethod
     ) {
       return res.status(400).json({
@@ -77,8 +73,6 @@ export const placeOrder = async (req, res) => {
       userId,
       cartItems,
       deliveryDetails,
-      deliveryDate,
-      deliveryTime,
       paymentMethod,
       totalAmount,
       deliveryCharge,
