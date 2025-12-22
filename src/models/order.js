@@ -14,10 +14,12 @@ const orderSchema = new mongoose.Schema(
       {
         cakeName: String,
         variant: String,
+        cakePrice:Number,
         weight: String,
         price: Number,
         quantity: Number,
         nameOnCake: String,
+        addons:[]
       },
     ],
 
