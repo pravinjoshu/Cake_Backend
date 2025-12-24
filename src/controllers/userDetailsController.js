@@ -1,6 +1,7 @@
 import { UserDetails } from "../models/userDetails.js";
+import { Order } from "../models/order.js";
 
-// Get user details
+// 🔹 GET SINGLE USER
 export const getUserDetails = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -10,20 +11,20 @@ export const getUserDetails = async (req, res) => {
     if (!details) {
       return res.status(404).json({
         success: false,
-        message: "Details not found"
+        message: "Details not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      details
+      details,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// Save/Update user details
+// 🔹 SAVE / UPDATE USER DETAILS
 export const saveUserDetails = async (req, res) => {
   try {
     const {
@@ -38,7 +39,7 @@ export const saveUserDetails = async (req, res) => {
       city,
       pincode,
       instructions,
-      paymentMethod
+      paymentMethod,
     } = req.body;
 
     const address = `${flatNo}, ${street}, ${landmark}, ${city} - ${pincode}`;
@@ -46,18 +47,20 @@ export const saveUserDetails = async (req, res) => {
     let details = await UserDetails.findOne({ userId });
 
     if (details) {
-      details.fullName = fullName;
-      details.phone = phone;
-      details.email = email;
-      details.whatsapp = whatsapp;
-      details.flatNo = flatNo;
-      details.street = street;
-      details.landmark = landmark;
-      details.city = city;
-      details.pincode = pincode;
-      details.instructions = instructions;
-      details.paymentMethod = paymentMethod;
-      details.address = address;
+      Object.assign(details, {
+        fullName,
+        phone,
+        email,
+        whatsapp,
+        flatNo,
+        street,
+        landmark,
+        city,
+        pincode,
+        instructions,
+        paymentMethod,
+        address,
+      });
       await details.save();
     } else {
       details = await UserDetails.create({
@@ -73,17 +76,52 @@ export const saveUserDetails = async (req, res) => {
         pincode,
         instructions,
         paymentMethod,
-        address
+        address,
       });
     }
 
     res.status(200).json({
       success: true,
       message: "Details saved successfully",
-      details
+      details,
     });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// 🔹 GET ALL CUSTOMERS (NEW → OLD SORTED)
+export const getAllUserDetails = async (req, res) => {
+  try {
+    // 🔥 SORTED HERE
+    const users = await UserDetails.find().sort({ createdAt: -1 });
+
+    const usersWithOrderStats = await Promise.all(
+      users.map(async (user) => {
+        const orders = await Order.find({ userId: user.userId });
+
+        const totalOrders = orders.length;
+        const totalSpent = orders.reduce(
+          (sum, order) => sum + order.totalAmount,
+          0
+        );
+
+        return {
+          ...user.toObject(),
+          totalOrders,
+          totalSpent,
+        };
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      details: usersWithOrderStats,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
