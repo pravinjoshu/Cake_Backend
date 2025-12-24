@@ -72,5 +72,16 @@ couponSchema.methods.calculateDiscount = function(orderAmount) {
   // Ensure discount doesn't exceed order amount
   return Math.min(discount, orderAmount);
 };
+
+// Use coupon - atomically increment usedCount
+couponSchema.methods.useCoupon = async function() {
+  const result = await mongoose.model('Coupon').findByIdAndUpdate(
+    this._id,
+    { $inc: { usedCount: 1 } },
+    { new: true }
+  );
+  return result;
+};
+
 const Coupon = mongoose.model('Coupon', couponSchema);
 export default Coupon;

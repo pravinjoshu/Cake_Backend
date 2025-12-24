@@ -50,7 +50,11 @@ export const placeOrder = async (req, res) => {
       deliveryDetails,
       paymentMethod,
       totalAmount,
+      finalAmount,
       deliveryCharge,
+      appliedCouponId,
+      discountAmount
+//       deliveryCharge,
       deliveryDate, // Added
       deliveryTime, // Added
       wishesOnCake  // Added
@@ -83,10 +87,35 @@ export const placeOrder = async (req, res) => {
       },
       paymentMethod,
       totalAmount,
+      finalAmount,
       deliveryCharge,
+      appliedCouponId: appliedCouponId || null,
+      discountAmount: discountAmount || 0,
       status: "pending",
       notificationStatus: false,
     });
+
+    // 2️⃣ Handle Coupon Usage Tracking (Post-Creation)
+    if (appliedCouponId) {
+       try {
+         const Coupon = (await import('../models/Coupon.js')).default;
+         const UserCoupon = (await import('../models/UserCoupon.js')).default;
+
+         // Mark user coupon as used if it exists
+         await UserCoupon.findOneAndUpdate(
+           { userId, couponId: appliedCouponId, isUsed: false },
+           { isUsed: true, usedAt: new Date() }
+         );
+
+         // Increment global usage
+         const coupon = await Coupon.findById(appliedCouponId);
+         if (coupon) {
+           await coupon.useCoupon();
+         }
+       } catch (err) {
+         console.error("Coupon tracking failed:", err);
+       }
+    }
 
     // 2️⃣ CREATE NOTIFICATION (MATCHES YOUR SCHEMA)
     await Notification.create({

@@ -52,6 +52,27 @@ const orderSchema = new mongoose.Schema(
     totalAmount: { type: Number, required: true },
     deliveryCharge: { type: Number, required: true },
 
+    // Coupon & Discount tracking
+    appliedCouponId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Coupon",
+      default: null
+    },
+    discountAmount: {
+      type: Number,
+      default: 0
+    },
+    finalAmount: {
+      type: Number,
+      required: true
+    },
+
+    // Scratch card tracking
+    isScratchCardGenerated: {
+      type: Boolean,
+      default: false
+    },
+
     // ✅ FIXED: Changed "completed" to "delivered"
     status: {
       type: String,
