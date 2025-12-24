@@ -53,7 +53,7 @@ export const placeOrder = async (req, res) => {
       finalAmount,
       deliveryCharge,
       appliedCouponId,
-      discountAmount
+      discountAmount,
 //       deliveryCharge,
       deliveryDate, // Added
       deliveryTime, // Added
