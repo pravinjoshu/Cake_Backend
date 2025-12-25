@@ -45,18 +45,29 @@ export const generateScratchCard = async (req, res) => {
       }
     }
 
-    // 2. Find an available prize pool
-    const availablePool = await PrizePool.findAvailablePool();
+    // 2. Get prize pool IDs the user has already won (One user can win each prize pool once)
+    const wonPoolIds = await ScratchCard.find({ 
+      userId, 
+      isWinning: true,
+      prizePoolId: { $ne: null }
+    }).distinct('prizePoolId');
+
+    // 3. Find an available prize pool the user hasn't won from yet
+    const availablePool = await PrizePool.findAvailablePool(wonPoolIds);
 
     let scratchCard;
 
-    if (availablePool) {
-      // 3. Attempt atomic prize allocation
+    // 🛑 RULE: Random Winners (Not first-come-first-serve)
+    const winProbability = availablePool ? (availablePool.winProbability || 0.1) : 0;
+    const isRandomWinner = Math.random() < winProbability;
+
+    if (availablePool && isRandomWinner) {
+      // 4. Attempt atomic prize allocation
       const allocatedPool = await PrizePool.allocatePrize(availablePool._id);
 
       if (allocatedPool) {
         // Successfully allocated a prize - create WINNING scratch card
-        const rewardText = `🎉 You won ${allocatedPool.prizeName}!`;
+        const rewardText =  `You won ${allocatedPool.prizeName}!`;
         
         scratchCard = new ScratchCard({
           userId,
@@ -66,10 +77,10 @@ export const generateScratchCard = async (req, res) => {
           rewardText,
           isWinning: true,
           status: 'CREATED',
-          expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+          expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days expiry
         });
       } else {
-        // Prize pool exhausted during allocation - create non-winning card
+        // Prize pool exhausted during allocation or random check failed - create non-winning card
         scratchCard = new ScratchCard({
           userId,
           orderId,
@@ -82,7 +93,7 @@ export const generateScratchCard = async (req, res) => {
         });
       }
     } else {
-      // No available prize pools - create non-winning card
+      // No available prize pools, already won, or not a random winner - create non-winning card
       scratchCard = new ScratchCard({
         userId,
         orderId,

@@ -38,6 +38,12 @@ const prizePoolSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     default: null // Admin user ID
+  },
+  winProbability: {
+    type: Number,
+    default: 0.1, // Default 10% chance
+    min: 0,
+    max: 1
   }
 }, { timestamps: true });
 
@@ -83,16 +89,22 @@ prizePoolSchema.statics.allocatePrize = async function(poolId) {
 };
 
 // Static method: Find available prize pool
-// Returns the first active pool with available prizes
-prizePoolSchema.statics.findAvailablePool = async function() {
+// Returns the first active pool with available prizes (that is not in excludeIds)
+prizePoolSchema.statics.findAvailablePool = async function(excludeIds = []) {
   const now = new Date();
   
-  const pool = await this.findOne({
+  const query = {
     isActive: true,
     expiryDate: { $gt: now },
     couponId: { $ne: null }, // Must have a coupon
     $expr: { $lt: ['$usedQuantity', '$totalQuantity'] }
-  })
+  };
+
+  if (excludeIds.length > 0) {
+    query._id = { $nin: excludeIds };
+  }
+  
+  const pool = await this.findOne(query)
   .sort({ createdAt: 1 }) // First-come, first-served (oldest pool first)
   .populate('couponId');
   
