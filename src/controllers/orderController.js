@@ -72,6 +72,22 @@ export const placeOrder = async (req, res) => {
       });
     }
 
+    // 0️⃣ PRE-CHECK: Coupon Reuse Prevention
+    if (appliedCouponId) {
+      const existingOrderWithCoupon = await Order.findOne({
+        userId,
+        appliedCouponId,
+        status: { $ne: 'cancelled' }
+      });
+      
+      if (existingOrderWithCoupon) {
+        return res.status(400).json({
+          success: false,
+          message: "You have already used this coupon code."
+        });
+      }
+    }
+
     const orderIdStr = generateOrderId();
 
     // 1️⃣ CREATE ORDER
@@ -222,6 +238,28 @@ export const updateOrderStatus = async (req, res) => {
 
     if (!order) {
       return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    // 🛑 RULE: Cancelled order → scratch invalid
+    if (status === 'cancelled') {
+      try {
+        const ScratchCard = (await import('../models/ScratchCard.js')).default;
+        const UserCoupon = (await import('../models/UserCoupon.js')).default;
+
+        const scratchCard = await ScratchCard.findOne({ orderId: id });
+        if (scratchCard) {
+          scratchCard.status = 'EXPIRED'; // Mark as expired/invalid
+          await scratchCard.save();
+
+          // If a reward was claimed but NOT yet used, remove it
+          await UserCoupon.deleteOne({ 
+            scratchCardId: scratchCard._id, 
+            isUsed: false 
+          });
+        }
+      } catch (err) {
+        console.error("Failed to invalidate scratch card on cancellation:", err);
+      }
     }
 
     res.json({ success: true, order });

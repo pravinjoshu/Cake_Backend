@@ -60,8 +60,23 @@ export const validateUserCoupon = async (req, res) => {
       });
     }
 
-    // Check if user owns this coupon (for reward-only coupons)
-    if (coupon.isRewardOnly) {
+    // Check if user has already used this coupon
+    if (!coupon.isRewardOnly) {
+      // Check for public coupons usage in past orders
+      const usedInOrder = await Order.findOne({ 
+        userId, 
+        appliedCouponId: coupon._id,
+        status: { $ne: 'cancelled' } 
+      });
+
+      if (usedInOrder) {
+        return res.status(403).json({ 
+          success: false, 
+          message: 'You have already used this coupon code.' 
+        });
+      }
+    } else {
+      // Check if user owns and hasn't used this reward coupon
       const userCoupon = await UserCoupon.findOne({ 
         userId, 
         couponId: coupon._id,
@@ -69,9 +84,11 @@ export const validateUserCoupon = async (req, res) => {
       });
 
       if (!userCoupon) {
+        // Double check if they used it already
+        const alreadyUsed = await UserCoupon.findOne({ userId, couponId: coupon._id, isUsed: true });
         return res.status(403).json({ 
           success: false, 
-          message: 'You do not have access to this coupon' 
+          message: alreadyUsed ? 'You have already used this reward.' : 'You do not have access to this coupon' 
         });
       }
     }
