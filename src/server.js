@@ -16,6 +16,7 @@ import prizePoolRoutes from './routers/prizePoolRoutes.js';
  
 import wishlistRoutes from './routers/wishlistRoutes.js'
 import reviewRoutes from './routers/reviewRoutes.js'
+import cartRoutes from './routers/cartRoutes.js'
  
 
 
@@ -26,6 +27,7 @@ dotenv.config();
 
 console.log("Loaded Email User:", process.env.EMAIL_USER);
 console.log("Loaded Email Pass:", process.env.EMAIL_PASS);
+
 
 
 // Connect to MongoDB
@@ -53,6 +55,7 @@ app.use("/api", wishlistRoutes);
 app.use('/api/scratchcards', scratchCardRouter);
 app.use('/api/admin/prize-pools', prizePoolRoutes);
 app.use("/api", reviewRoutes);
+app.use("/api", cartRoutes);
 
  console.log(process.env.BASE_URL,"env")
  
