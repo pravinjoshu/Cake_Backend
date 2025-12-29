@@ -22,6 +22,7 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role:"user",
     });
 
     res.status(201).json({
@@ -65,7 +66,7 @@ export const loginUser = async (req, res) => {
       token,
       user: {
         ...user._doc,
-        role: "user"    
+          
       }
     });
   } catch (err) {
@@ -124,7 +125,7 @@ export const googleLogin = async (req, res) => {
       token,
        user: {
         ...user._doc,
-        role: "user"   // <-- response la role send panrom
+          // <-- response la role send panrom
       }
     });
   } catch (error) {
