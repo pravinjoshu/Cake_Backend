@@ -4,9 +4,9 @@ import {addBanner,getBanners,deleteBanner}  from "../controllers/bannerControlle
 
 const router = express.Router();
 
-router.post("/add", upload.single("image"), addBanner);
+router.post("/banner", upload.single("image"), addBanner);
 router.get("/banner", getBanners);          // ✅ GET
-router.delete("/delete/:id", deleteBanner)
+router.delete("/banner/:id", deleteBanner)
 
 export default router;
 
