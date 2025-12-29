@@ -17,6 +17,7 @@ import prizePoolRoutes from './routers/prizePoolRoutes.js';
 import wishlistRoutes from './routers/wishlistRoutes.js'
 import reviewRoutes from './routers/reviewRoutes.js'
 import cartRoutes from './routers/cartRoutes.js'
+import bannerRoutes from './routers/bannerRoutes.js'
  
 
 
@@ -40,6 +41,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static("public"));
 app.use("/review", express.static("public/review"));
+app.use("/banner", express.static("public/banner"));
 
 // API Routes
 app.use("/api/users", userRoutes);
@@ -56,6 +58,7 @@ app.use('/api/scratchcards', scratchCardRouter);
 app.use('/api/admin/prize-pools', prizePoolRoutes);
 app.use("/api", reviewRoutes);
 app.use("/api", cartRoutes);
+app.use("/api", bannerRoutes);
 
  console.log(process.env.BASE_URL,"env")
  

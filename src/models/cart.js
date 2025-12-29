@@ -30,12 +30,7 @@ const cartSchema = new mongoose.Schema(
         },
 
         // ⭐ ADD THIS
-        addons: [
-          {
-            name: String,
-            price: Number,
-          },
-        ],
+        addons: [],
       },
     ],
   },
