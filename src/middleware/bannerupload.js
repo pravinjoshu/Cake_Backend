@@ -24,8 +24,8 @@ const storage = multer.diskStorage({
     if (!req.imageCount) req.imageCount = 0;
     req.imageCount++;
 
-    const bannerName = req.body.bannerName
-    console.log(bannerName)
+    const bannerName = req.body.bannerName.trim();
+   
 
     const ext = path.extname(file.originalname);
     const fileName = `${bannerName}${ext}`;

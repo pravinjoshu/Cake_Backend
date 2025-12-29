@@ -11,8 +11,9 @@ export const addBanner = async (req, res) => {
     }
 
     const banner = new Banner({
-      bannerName:bannerName,
-      image: `${process.env.BASE_URL}/banner/${req.file.filename}`
+      bannerName:bannerName.trim(),
+      // .replace(/\s+/g, "_"),
+      image: `${process.env.BASE_URL}/public/banner/${req.file.filename}`
     });
 
     await banner.save();
