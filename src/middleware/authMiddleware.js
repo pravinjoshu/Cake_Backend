@@ -15,6 +15,14 @@ export const verifyToken = (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
+    // Token empty ah irukka check pannu
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Token is missing. Please login again.",
+      });
+    }
+
     // Same secret key use pannunga (login time la use panradhe)
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "SECRET_KEY");
 
@@ -23,10 +31,23 @@ export const verifyToken = (req, res, next) => {
 
     next(); // Next step → controller
   } catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: "Invalid or expired token.",
-    });
+    // Token verification failed - specific error messages
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Token has expired. Please login again.",
+      });
+    } else if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token. Please login again.",
+      });
+    } else {
+      return res.status(401).json({
+        success: false,
+        message: "Token verification failed. Please login again.",
+      });
+    }
   }
 };
 

@@ -4,7 +4,7 @@ import path from "path";
 export const updateImage = (req, res) => {
   try {
     const cakeName = req.body.cakeName.toLowerCase().replace(/ /g, "_");
-   const weightFolder = (req.body.weight || "").replace(".", "_");
+    const weightFolder = (req.body.weight || "").replace(".", "_");
 
 
     const oldImage = req.body.oldImage;
@@ -16,12 +16,12 @@ export const updateImage = (req, res) => {
     }
 
     const newImage = req.file.filename;
-    console.log(process.env.BASE_URL,"env")
+    const baseUrl = process.env.BASE_URL || "http://localhost:5000";
 
     res.status(200).json({
       success: true,
       message: "Image updated successfully",
-      image: `${process.env.BASE_URL}/public/images/${cakeName}_${weightFolder}/${newImage}`
+      image: `${baseUrl}/public/images/${cakeName}_${weightFolder}/${newImage}`
     });
 
   } catch (err) {
@@ -40,9 +40,10 @@ export const uploadImage = (req, res) => {
   try {
     const cakeName = req.body.cakeName.toLowerCase().replace(/ /g, "_");
     const weightFolder = req.body.weight.replace(".", "_");
+    const baseUrl = process.env.BASE_URL || "http://localhost:5000";
 
     const urls = req.files.map(file => {
-      return `${process.env.BASE_URL}/public/images/${cakeName}_${weightFolder}/${file.filename}`;
+      return `${baseUrl}/public/images/${cakeName}_${weightFolder}/${file.filename}`;
     });
 
     res.status(200).json({
