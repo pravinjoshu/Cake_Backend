@@ -18,6 +18,8 @@ export const updateImage = (req, res) => {
     const newImage = req.file.filename;
     const baseUrl = process.env.BASE_URL || "http://localhost:5000";
 
+    console.log(baseUrl)
+
     res.status(200).json({
       success: true,
       message: "Image updated successfully",
@@ -34,13 +36,12 @@ export const updateImage = (req, res) => {
 
 
 
-
-
 export const uploadImage = (req, res) => {
   try {
     const cakeName = req.body.cakeName.toLowerCase().replace(/ /g, "_");
     const weightFolder = req.body.weight.replace(".", "_");
     const baseUrl = process.env.BASE_URL || "http://localhost:5000";
+    console.log(baseUrl)
 
     const urls = req.files.map(file => {
       return `${baseUrl}/public/images/${cakeName}_${weightFolder}/${file.filename}`;
