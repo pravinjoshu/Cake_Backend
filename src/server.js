@@ -13,12 +13,12 @@ import notificationRoutes from "./routers/notificationRoutes.js";
 import couponRoutes from "./routers/couponRoutes.js"
 import scratchCardRouter from './routers/scratchCardRouter.js';
 import prizePoolRoutes from './routers/prizePoolRoutes.js';
- 
+
 import wishlistRoutes from './routers/wishlistRoutes.js'
 import reviewRoutes from './routers/reviewRoutes.js'
 import cartRoutes from './routers/cartRoutes.js'
 import bannerRoutes from './routers/bannerRoutes.js'
- 
+
 
 
 
@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes)
 app.use("/api", uploadRoutes);
-app.use("/api",notificationRoutes)
+app.use("/api", notificationRoutes)
 app.use("/api", loginRoutes)
 app.use("/api", whatsappRoutes)
 app.use("/api", userDetailsRoutes)
@@ -66,12 +66,14 @@ app.use("/api", reviewRoutes);
 app.use("/api", cartRoutes);
 app.use("/api", bannerRoutes);
 
- console.log(process.env.BASE_URL,"env")
- 
+console.log(process.env.BASE_URL, "env")
+
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}`);
 });
+
+export default app;
 
 
 
