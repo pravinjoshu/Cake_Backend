@@ -43,6 +43,12 @@ app.use("/public", express.static("public"));
 app.use("/review", express.static("public/review"));
 app.use("/banner", express.static("public/banner"));
 
+
+app.get("/", (req, res) => {
+  res.send("Backend working");
+});
+
+
 // API Routes
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes)
