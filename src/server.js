@@ -27,16 +27,24 @@ connectDB();
 
 const app = express();
 
-// ✅ CORS
+ 
+
 app.use(
   cors({
     origin: [
-      "https://cake-forest.netlify.app"
+      "https://cake-forest.netlify.app",
+      "http://localhost:5173", // dev
+      "http://localhost:3000"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
   })
 );
+
+// VERY IMPORTANT (Vercel preflight fix)
+app.options("*", cors());
+
 
 
 app.use(express.json());
