@@ -25,22 +25,12 @@ dotenv.config();
 // DB connect (IMPORTANT: function safe-a irukkanum)
 connectDB();
 
+const PORT = process.env.PORT || 5000;
+
 const app = express();
 
- 
-
-app.use(
-  cors({
-    origin: [
-      "https://cake-forest.netlify.app",
-      "http://localhost:5173", // dev
-      "http://localhost:3000"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
-  })
-);
+// ✅ CORS
+app.use(cors());
 
 // VERY IMPORTANT (Vercel preflight fix)
 app.options("*", cors());
@@ -78,5 +68,6 @@ app.use("/api", cartRoutes);
 app.use("/api", bannerRoutes);
 
  
-
-export default app;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
