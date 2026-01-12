@@ -25,18 +25,12 @@ dotenv.config();
 // DB connect (IMPORTANT: function safe-a irukkanum)
 connectDB();
 
+const PORT = process.env.PORT || 5000;
+
 const app = express();
 
 // ✅ CORS
-app.use(
-  cors({
-    origin: [
-      "https://cake-forest.netlify.app"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true
-  })
-);
+app.use(cors());
 
 
 app.use(express.json());
@@ -70,5 +64,6 @@ app.use("/api", cartRoutes);
 app.use("/api", bannerRoutes);
 
  
-
-export default app;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

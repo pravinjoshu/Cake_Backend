@@ -2,11 +2,18 @@ import mongoose from "mongoose";
 
 const reviewSchema = new mongoose.Schema(
   {
-    cakeName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+
+    productId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Product",
+  required: true,
+},
+
+    // cakeName: {
+    //   type: String,
+    //   required: true,
+    //   trim: true,
+    // },
 
     description: {
       type: String,
