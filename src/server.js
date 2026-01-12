@@ -32,8 +32,7 @@ const app = express();
 // ✅ CORS
 app.use(cors());
 
-// VERY IMPORTANT (Vercel preflight fix)
-app.options("*", cors());
+ 
 
 
 
