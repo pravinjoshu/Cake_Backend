@@ -19,6 +19,7 @@ import wishlistRoutes from "./routers/wishlistRoutes.js";
 import reviewRoutes from "./routers/reviewRoutes.js";
 import cartRoutes from "./routers/cartRoutes.js";
 import bannerRoutes from "./routers/bannerRoutes.js";
+import chatBotRoutes from "./routers/chatBotRoutes.js";
 
 dotenv.config();
 
@@ -65,6 +66,7 @@ app.use("/api/admin/prize-pools", prizePoolRoutes);
 app.use("/api", reviewRoutes);
 app.use("/api", cartRoutes);
 app.use("/api", bannerRoutes);
+app.use("/api",chatBotRoutes)
 
  
 app.listen(PORT, () => {
